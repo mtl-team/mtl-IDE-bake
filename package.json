@@ -1,0 +1,107 @@
+{
+  "name": "mtl-ide",
+  "version": "0.0.1",
+  "description": "A tool for mtl IDE",
+  "private": true,
+  "main": "app/main.js",
+  "scripts": {
+    "build": "(npm run build:main) && npm run build:renderer",
+    "build:main": "cross-env NODE_ENV=production webpack --config ./webpack/main.prod.config.babel.js --display-optimization-bailout",
+    "build:renderer": "cross-env NODE_ENV=production webpack --config ./webpack/renderer.prod.config.babel.js --display-optimization-bailout",
+    "build:vendor": "cross-env NODE_ENV=production webpack --config ./webpack/vendor.prod.config.babel.js --display-optimization-bailout",
+    "dev": "npm run dev:renderer & npm run dev:main",
+    "dev:main": "webpack --config webpack/main.dev.config.babel.js -w",
+    "dev:renderer": "webpack-dev-server --config ./webpack/renderer.dev.config.babel.js",
+    "start": "electron ./app/main.js",
+    "pack": "cross-env ELECTRON_MIRROR=https://npm.taobao.org/mirrors/electron/ build --dir",
+    "pack:mac": "cross-env ELECTRON_MIRROR=https://npm.taobao.org/mirrors/electron/ build -m",
+    "pack:win": "cross-env ELECTRON_MIRROR=https://npm.taobao.org/mirrors/electron/ build -w",
+    "rebuild": "./node_modules/.bin/electron-rebuild  -m ./app"
+  },
+  "keywords": [],
+  "build": {
+    "productName": "mtl-IDE",
+    "appId": "org.yonyou.mtl",
+    "asar": false,
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "static/icon"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "static/icon"
+    },
+    "linux": {
+      "target": [
+        "deb"
+      ]
+    },
+    "directories": {
+      "buildResources": "resources",
+      "output": "release"
+    }
+  },
+  "author": {
+    "name": "Kvkens",
+    "email": "yueming@yonyou.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "antd": "^3.4.4",
+    "axios": "^0.18.0",
+    "mirrorx": "^0.2.10",
+    "monaco-editor": "^0.12.0",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2"
+  },
+  "devDependencies": {
+    "ansi-html": "0.0.7",
+    "ansi-to-html": "^0.6.4",
+    "autoprefixer": "^8.4.1",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-minify-webpack-plugin": "^0.3.1",
+    "babel-plugin-import": "^1.7.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "clean-webpack-plugin": "^0.1.19",
+    "co": "^4.6.0",
+    "cross-env": "^5.1.4",
+    "cross-spawn": "^6.0.5",
+    "css-loader": "^0.28.11",
+    "download-git-repo": "^1.0.2",
+    "electron": "^2.0.0",
+    "electron-builder": "^20.11.1",
+    "electron-is": "^2.4.1",
+    "electron-rebuild": "^1.7.3",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.11",
+    "fix-path": "^2.1.0",
+    "fs-extra": "^6.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "less": "^3.0.2",
+    "less-loader": "^4.1.0",
+    "node-fetch": "^2.1.2",
+    "npm-run-path": "^2.0.2",
+    "npminstall": "^3.5.0",
+    "postcss-loader": "^2.1.4",
+    "semver": "^5.5.0",
+    "semver-regex": "^2.0.0",
+    "spawn-sync": "^1.0.15",
+    "style-loader": "^0.21.0",
+    "tcp-ping": "^0.1.1",
+    "url-loader": "^1.0.1",
+    "uuid": "^3.2.1",
+    "webpack": "^3.11.0",
+    "webpack-dev-server": "^2.11.2",
+    "webpack-merge": "^4.1.2"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "mtl-ide",
+  "productName": "mtl-ide",
+  "version": "0.0.1",
+  "description": "A tool for mtl ide",
+  "main": "./main.js",
+  "keywords": [],
+  "author": {
+    "name": "Kvkens",
+    "email": "yueming@yonyou.com"
+  },
+  "scripts": {
+    "postinstall": "npm rebuild --runtime=electron --target=1.8.4 --disturl=https://atom.io/download/atom-shell --build-from-source"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "npm": "^6.1.0",
+    "npminstall": "^3.6.2",
+    "uba": "4.0.1"
+  }
+}
