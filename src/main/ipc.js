@@ -20,7 +20,7 @@ import { APP_PATH, NPM_PATH, UBA_PATH, UBA_CONFIG_PATH, UBA_BIN_PATH } from './p
 import fse from 'fs-extra';
 import tasks from './tasks';
 
-import checkNpm from './ipc/checkNpm';
+// import checkNpm from './ipc/checkNpm';
 import openUrl from './ipc/openUrl';
 import importProject from './ipc/importProject';
 import ubainstall from './ipc/ubainstall';
@@ -33,10 +33,11 @@ import ubabuild from './ipc/ubabuild';
 import checkLocalConfig from './ipc/checkLocalConfig';
 import other from './ipc/other';
 import test from './ipc/test';
+import login from './ipc/login';
 
 
 const IPC = () => {
-    checkNpm();//内网npm环境检测
+    // checkNpm();//内网npm环境检测
     openUrl();//打开本机默认浏览器
     importProject();//导入uba工程
     ubainstall();//加载初始化安装
@@ -49,6 +50,7 @@ const IPC = () => {
     checkLocalConfig();//检查uba配置文件
     other();
     test();
+    login();// 登录友户通
 }
 
 export default IPC;

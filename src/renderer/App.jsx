@@ -23,7 +23,7 @@ const App = () => (
         <Content style={{ margin: '0', overflow: 'initial' }}>
           {/* <Header className="titlebar" >
           </Header> */}
-          <div style={{ padding: 0, background: '#fff' }}>
+          <div style={{ padding: 0, background: '#f5f5f5' }}>
             <Routes />
           </div>
         </Content>

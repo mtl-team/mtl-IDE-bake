@@ -7,10 +7,14 @@
  */
 
 import { Notification } from 'electron';
+const rp = require('request-promise');
 import is from 'electron-is';
 import fse from 'fs-extra';
 import fs from 'fs';
-import {UBA_CONFIG_PATH} from 'main/path';
+const utils = require('utility');
+const Configstore = require('configstore');
+const conf = new Configstore('mtlconfig');
+import { UBA_CONFIG_PATH } from 'main/path';
 
 //不同平台和开发环境
 export const isDev = is.dev();
@@ -102,7 +106,7 @@ export const getNowDate = () => {
  * @param {string} path 要判断的路径
  * @returns {boolean} true=存在 false=不存在
  */
-export const isExistPath = (currArray,path) => {
+export const isExistPath = (currArray, path) => {
     let flag = false;
     for (let i = 0; i < currArray.length; i++) {
         if (currArray[i].path == path) {
@@ -120,5 +124,154 @@ export const isExistPath = (currArray,path) => {
 export const setLastPath = async (lastpath) => {
     let obj = await readFileJSON(UBA_CONFIG_PATH);
     obj.lastPath = lastpath;
-    writeFileJSON(UBA_CONFIG_PATH,obj);
+    writeFileJSON(UBA_CONFIG_PATH, obj);
+}
+
+export const YHT_URL = {
+    // 友户通登录开发者中心取票
+    YHT_LOGIN_BY_DEVELOP_URL: 'https://euc.yonyoucloud.com/cas/login?sysid=developer&service=https://developer.yonyoucloud.com:443/portal/sso/login.jsp',
+    // 开发者中心验票
+    DEVELOP_TICKET: 'https://developer.yonyoucloud.com:443/portal/sso/login.jsp',
+    // 开发者中心UA
+    DEVELOP_HTTP_HEADER_UA: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36',
+    // 开发者中心Referer
+    DEVELOP_HTTP_HEADER_REFERER: 'https://developer.yonyoucloud.com'
+}
+
+/**
+ * 获得友户通单点登录票据
+ *
+ * @param {*} { username, password } 用户名、密码
+ * @returns {JSON} {success,ticket,body}
+ */
+export const getYhtTicket = async function ({ username, password }) {
+    let formData = {
+        username: username,
+        shaPassword: utils.sha1(password),
+        md5Password: utils.md5(password),
+        tenantCode: 'default',
+        tenantid: -1,
+        lt: '',
+        execution: '',
+        _eventId: 'submit',
+        tokeninfo: null,
+        isAutoLogin: 0,
+        randomvalue: 1557123285843,
+        validateCode: '',
+        validateKey: 1557123285000
+    }
+    // 构建登录友户通目的为了获得ticket
+    let options = {
+        url: YHT_URL.YHT_LOGIN_BY_DEVELOP_URL,
+        headers: {
+            'User-Agent': YHT_URL.DEVELOP_HTTP_HEADER_UA
+        },
+        jar: true,
+        method: 'post',
+        form: formData
+    };
+    conf.set('username', username);
+    conf.set('shaPassword', utils.sha1(password));
+    conf.set('md5Password', utils.md5(password));
+
+    let resultJSON = {};
+    let yht_ticket_data = await rp(options);
+    // console.log(yht_ticket_data)
+    let result = yht_ticket_data.indexOf('?ticket=');
+    if (result !== -1) {
+        console.log('友户通取票成功');
+        // 取票
+        let ticket = yht_ticket_data.split('?ticket=')[1].split('";')[0];
+        resultJSON['success'] = true;
+        // 写票
+        resultJSON['ticket'] = ticket;
+        conf.set('ticket', ticket);
+        // 返回原始body
+        resultJSON['body'] = yht_ticket_data;
+    } else {
+        resultJSON['success'] = false;
+    }
+    return resultJSON;
+}
+
+/**
+ * 开发者中心验票
+ *
+ * @param {*} { ticket } 票据
+ * @returns {JSON} {success,body}
+ */
+export const getValidateTicketDevelop = async function ({ ticket }) {
+    let options = {
+        url: YHT_URL.DEVELOP_TICKET,
+        qs: {
+            ticket
+        },
+        jar: true,
+        method: 'get',
+        headers: {
+            'Upgrade-Insecure-Requests': 1,
+            'User-Agent': YHT_URL.DEVELOP_HTTP_HEADER_UA,
+            'Referer': YHT_URL.DEVELOP_HTTP_HEADER_REFERER
+        },
+    }
+    let resultJSON = {};
+    let yht_validate_ticket_data = await rp(options);
+    let result = yht_validate_ticket_data.indexOf('/fe/fe-portal/index.html');
+    if (result !== -1) {
+        console.log('开发者中心验票授权成功');
+        resultJSON['success'] = true;
+        resultJSON['body'] = yht_validate_ticket_data;
+    } else {
+        resultJSON['success'] = false;
+    }
+    // 读取完整的Cookies
+    rp(options, function (err, res, body) {
+        if (body.indexOf('/fe/fe-portal/index.html') !== -1) {
+            let devcookie = res.request.req.getHeader('cookie');
+            conf.set('cookie', devcookie);
+            // console.log(devcookie);
+        }
+
+    });
+    return resultJSON;
+}
+
+export const send = async function (options) {
+    let opts = {
+        jar: true,
+        method: 'get',
+        headers: {
+            'cookie': conf.get('cookie'),
+            'Upgrade-Insecure-Requests': 1,
+            'User-Agent': YHT_URL.DEVELOP_HTTP_HEADER_UA,
+            'Referer': YHT_URL.DEVELOP_HTTP_HEADER_REFERER
+        }
+    }
+    opts = { ...opts, ...options };
+    let result = await rp(opts);
+    // console.log(result)
+    return result;
+}
+
+export const download = async function (options, filename) {
+    let opts = {
+        method: 'get',
+        headers: {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+            'Accept-Encoding': 'gzip, deflate',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7',
+            'Connection': 'keep-alive',
+            'Cookie': conf.get('cookie'),
+            'Upgrade-Insecure-Requests': 1,
+            'User-Agent': YHT_URL.DEVELOP_HTTP_HEADER_UA,
+            'Referer': YHT_URL.DEVELOP_HTTP_HEADER_REFERER
+        }
+    }
+    opts = { ...opts, ...options };
+    // 获得文件夹路径
+    let fileFolder = path.dirname(filename);
+    // 创建文件夹
+    fse.ensureDirSync(fileFolder);
+    // 开始下载无需返回
+    return await rp(opts).pipe(fse.createWriteStream(filename));
 }

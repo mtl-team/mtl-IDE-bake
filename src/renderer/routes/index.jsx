@@ -5,6 +5,7 @@ import { Switch, Route } from 'mirrorx';
 // import MySpace from 'containers/MySpace';
 import Welcome from 'containers/Welcome';
 import MainPanel from 'containers/MainPanel';
+import Login from 'containers/Login';
 
 
 
@@ -12,7 +13,8 @@ class Routes extends Component {
     render() {
         return (
             <Switch>
-                <Route exact path="/" component={Welcome} />
+                <Route exact path="/" component={Login} />
+                <Route exact path="/welcome" component={Welcome} />
                 <Route path="/main" component={MainPanel} />
             </Switch>
         );

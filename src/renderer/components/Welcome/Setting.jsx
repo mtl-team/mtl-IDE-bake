@@ -132,7 +132,7 @@ class Setting extends Component {
                 <Col span={3}></Col>
                 <Col span={18}>
                     <Steps current={initStep - 1}>
-                        <Step title="设置" icon={<Icon type="setting" />} description="设置对项目的一些配置信息." />
+                        <Step title="设置" icon={<Icon type="setting" />} description="设置项目的配置信息." />
                         <Step title="安装" icon={<Icon type="bars" />} description="处理一些安装信息等." />
                     </Steps>
                 </Col>
@@ -200,7 +200,6 @@ class Setting extends Component {
                                 <Select placeholder="请选择镜像源">
                                     <Option value="https://registry.npm.taobao.org">https://registry.npm.taobao.org</Option>
                                     <Option value="https://registry.npmjs.org">https://registry.npmjs.org</Option>
-                                    <Option value="http://172.16.75.107:8081/repository/ynpm-group/">用友集团内网</Option>
                                 </Select>
                             )}
                         </FormItem>

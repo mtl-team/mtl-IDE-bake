@@ -18,11 +18,11 @@ const { Header, Footer, Sider, Content } = Layout;
 /**
  * 接收服务端当前运行npm镜像检测
  */
-ipc.on('uba::checkNpm::success', (event, msg) => {
-    if (msg) {
-        actions.welcome.changeYonyouNpm();
-    }
-});
+// ipc.on('uba::checkNpm::success', (event, msg) => {
+//     if (msg) {
+//         actions.welcome.changeYonyouNpm();
+//     }
+// });
 
 class Welcome extends Component {
     render() {

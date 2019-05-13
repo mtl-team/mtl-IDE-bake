@@ -1,16 +1,16 @@
 /**
- * 欢迎引导容器
+ * 登录
  */
 
 import React, { Component } from 'react';
 import mirror, { actions, connect } from 'mirrorx';
-import Welcome from '../components/Welcome';
-import WelcomeModel from '../models/Welcome';
+import Login from '../components/Login';
+import LoginModel from '../models/Login';
 import { ipcRenderer } from 'electron';
 
 const ipc = ipcRenderer;
 
-mirror.model(WelcomeModel);
+mirror.model(LoginModel);
 
 mirror.hook((action, getState) => {
   const { routing: { location } } = getState();
@@ -21,10 +21,10 @@ mirror.hook((action, getState) => {
     //   port: '8081'
     // });
     //检测本地配置文件
-    ipc.send('uba::checkLocalUbaConfig');
+    // ipc.send('uba::checkLocalUbaConfig');
     //加载远程模板
-    actions.welcome.getRemoteConfigTemplates();
+    // actions.welcome.getRemoteConfigTemplates();
   }
 });
 
-export default connect((state) => state.welcome)(Welcome);
+export default connect((state) => state.login)(Login);

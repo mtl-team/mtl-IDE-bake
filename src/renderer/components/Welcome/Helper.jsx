@@ -36,7 +36,7 @@ class Helper extends Component {
                         <img className="banner" src={bannerPng} />
                     </Col>
                     <Col className="col-center" span={24} >
-                        <div className="title">应用平台开发者工具</div>
+                        <div className="title">MTL - IDE</div>
                         <div className="version">Version {pkg.version}</div>
                     </Col>
                     <Col span={24} >

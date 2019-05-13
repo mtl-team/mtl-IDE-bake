@@ -74,11 +74,11 @@ export default {
             });
         },
         //修改内网npm镜像源
-        changeYonyouNpm(data, getState) {
-            actions.welcome.save({
-                registry: 'http://172.16.75.107:8081/repository/ynpm-group/'
-            });
-        },
+        // changeYonyouNpm(data, getState) {
+        //     actions.welcome.save({
+        //         registry: 'http://172.16.75.107:8081/repository/ynpm-group/'
+        //     });
+        // },
         //获得安装的参数
         getInitParams(data, getState) {
             let { title, organization, repositories, projectName, projectPath, npmInstall, registry } = getState().welcome;
