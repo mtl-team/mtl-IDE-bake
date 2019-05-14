@@ -6,6 +6,7 @@ import { Switch, Route } from 'mirrorx';
 import Welcome from 'containers/Welcome';
 import MainPanel from 'containers/MainPanel';
 import Login from 'containers/Login';
+import Templates from 'containers/Templates';
 
 
 
@@ -14,6 +15,7 @@ class Routes extends Component {
         return (
             <Switch>
                 <Route exact path="/" component={Login} />
+                <Route exact path="/templates" component={Templates} />
                 <Route exact path="/welcome" component={Welcome} />
                 <Route path="/main" component={MainPanel} />
             </Switch>

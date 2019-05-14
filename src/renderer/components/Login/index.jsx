@@ -14,19 +14,6 @@ const ipc = ipcRenderer;
 const { Header, Footer, Sider, Content } = Layout;
 
 /**
- * 接收服务端当前运行npm镜像检测
- */
-// ipc.on('uba::checkNpm::success', (event, msg) => {
-//     if (msg) {
-//         actions.welcome.changeYonyouNpm();
-//     }
-// });
-
-// ipc.send('uba::set::config',{
-//     runProject : path.join(item.projectPath,item.projectName),
-//     title:item.title
-// });
-/**
  * 登录成功
  */
 ipc.on('mtl::login::success', (event, msg) => {
@@ -36,6 +23,7 @@ ipc.on('mtl::login::success', (event, msg) => {
         description: '正在跳转，请稍等！'
     });
     actions.login.save({ loading: false });
+    actions.routing.push('/templates');
 });
 /**
  * 登录失败
