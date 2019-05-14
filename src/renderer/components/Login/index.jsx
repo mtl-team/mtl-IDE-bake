@@ -31,10 +31,11 @@ const { Header, Footer, Sider, Content } = Layout;
  */
 ipc.on('mtl::login::success', (event, msg) => {
     console.log('mtl::login::success', msg);
-    notification.error({
+    notification.success({
         message: '登录成功',
         description: '正在跳转，请稍等！'
     });
+    actions.login.save({ loading: false });
 });
 /**
  * 登录失败
@@ -48,24 +49,44 @@ ipc.on('mtl::login::fail', (event, msg) => {
     actions.login.save({ loading: false });
 });
 
+/**
+ * 保存用户
+ */
+ipc.on('mtl::login::remember::success', (event, msg) => {
+    console.log('mtl::login::remember::success', msg);
+    if (msg.success) {
+        actions.login.save({
+            username: msg.data.username,
+            password: msg.data.password
+        });
+    }
+});
+
 class Login extends Component {
+
+    componentDidMount() {
+        // 检测是否自动登录
+        ipc.send('mtl::login::remember');
+    }
+    // 登录
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
-                // actions.login.save({ loading: true });
+                actions.login.save({ loading: true });
 
                 ipc.send('mtl::login', {
                     username: values.username,
-                    password: values.password
+                    password: values.password,
+                    remember: values.remember
                 });
             }
         });
     };
     render() {
         const { getFieldDecorator } = this.props.form;
-        let { loading } = this.props;
+        let { loading, username, password } = this.props;
         return (
             <Layout className="login-wrap" style={{ "background": "#f4f4f4" }}>
                 <Content>
@@ -80,6 +101,7 @@ class Login extends Component {
                                         <Form.Item>
                                             {getFieldDecorator('username', {
                                                 rules: [{ required: true, message: '请输入友户通账号!' }],
+                                                initialValue: username
                                             })(
                                                 <Input
                                                     disabled={loading}
@@ -91,6 +113,7 @@ class Login extends Component {
                                         <Form.Item>
                                             {getFieldDecorator('password', {
                                                 rules: [{ required: true, message: '请输入友户通密码!' }],
+                                                initialValue: password
                                             })(
                                                 <Input
                                                     disabled={loading}

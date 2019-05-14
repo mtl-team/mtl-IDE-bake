@@ -144,7 +144,7 @@ export const YHT_URL = {
  * @param {*} { username, password } 用户名、密码
  * @returns {JSON} {success,ticket,body}
  */
-export const getYhtTicket = async function ({ username, password }) {
+export const getYhtTicket = async function ({ username, password, remember }) {
     let formData = {
         username: username,
         shaPassword: utils.sha1(password),
@@ -170,9 +170,7 @@ export const getYhtTicket = async function ({ username, password }) {
         method: 'post',
         form: formData
     };
-    conf.set('username', username);
-    conf.set('shaPassword', utils.sha1(password));
-    conf.set('md5Password', utils.md5(password));
+
 
     let resultJSON = {};
     let yht_ticket_data = await rp(options);
@@ -180,6 +178,11 @@ export const getYhtTicket = async function ({ username, password }) {
     let result = yht_ticket_data.indexOf('?ticket=');
     if (result !== -1) {
         console.log('友户通取票成功');
+        // 写配置
+        conf.set('username', username);
+        remember ? conf.set('password', password) : conf.delete('password');
+        conf.set('shaPassword', utils.sha1(password));
+        conf.set('md5Password', utils.md5(password));
         // 取票
         let ticket = yht_ticket_data.split('?ticket=')[1].split('";')[0];
         resultJSON['success'] = true;
@@ -235,7 +238,12 @@ export const getValidateTicketDevelop = async function ({ ticket }) {
     });
     return resultJSON;
 }
-
+/**
+ * 请求数据
+ *
+ * @param {*} { options } 票据
+ * @returns {JSON} {success,body}
+ */
 export const send = async function (options) {
     let opts = {
         jar: true,
@@ -252,8 +260,13 @@ export const send = async function (options) {
     // console.log(result)
     return result;
 }
-
-export const download = async function (options, filename) {
+/**
+ * 下载资源
+ *
+ * @param {*} { options } 参数
+ * @returns {JSON} {success,body}
+ */
+export const download = function (options, filename, cb) {
     let opts = {
         method: 'get',
         headers: {
@@ -273,5 +286,30 @@ export const download = async function (options, filename) {
     // 创建文件夹
     fse.ensureDirSync(fileFolder);
     // 开始下载无需返回
-    return await rp(opts).pipe(fse.createWriteStream(filename));
+    rp(opts).pipe(fse.createWriteStream(filename)).on('close', cb);
+}
+/**
+ * 是否保存用户和密码并返回
+ *
+ * @param {*} { options } 参数
+ * @returns {JSON} {success,body}
+ */
+export const getRemember = () => {
+    let username = conf.get('username');
+    let password = conf.get('password');
+    let resultJson = {}
+    if (username && password) {
+        resultJson = {
+            success: true,
+            data: {
+                username,
+                password
+            }
+        }
+    } else {
+        resultJson = {
+            success: false
+        }
+    }
+    return resultJson;
 }

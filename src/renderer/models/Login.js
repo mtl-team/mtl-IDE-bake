@@ -7,7 +7,9 @@ import { actions } from 'mirrorx';
 export default {
     name: "login",
     initialState: {
-        loading: false
+        loading: false,
+        username: '',
+        password: ''
     },
     reducers: {
         save(state, data) {

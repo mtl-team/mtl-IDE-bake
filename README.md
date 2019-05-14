@@ -6,7 +6,9 @@
 
 通过[Releases](https://github.com/mtl-team/mtl-IDE/releases)页面下的提示下载使用
 
+## 截图
 
+![images](./screenshot/login@2x.png)
 
 ## 启动命令
 
@@ -27,3 +29,4 @@
 - `npm run pack`            直接运行的MacOS包
 - `npm run pack:mac`        构建macOS标准安装包(.dmg)
 - `npm run pack:win`        构建Windows标准安装包(.exe)
+

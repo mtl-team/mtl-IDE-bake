@@ -8,7 +8,7 @@
 
 import { ipcMain } from 'electron';
 
-import { log, getYhtTicket, getValidateTicketDevelop, send } from 'main/util';
+import { log, getYhtTicket, getValidateTicketDevelop, send, getRemember } from 'main/util';
 
 
 export default () => {
@@ -23,20 +23,26 @@ export default () => {
     ipcMain.on('mtl::login', async (event, arg) => {
         console.log(arg);
         // 从友户通取票
-        let yht_ticket = await getYhtTicket({ username: arg.username, password: arg.password });
+        let yht_ticket = await getYhtTicket({ username: arg.username, password: arg.password, remember: arg.remember });
         // 票据是否成功
         if (yht_ticket.success) {
             console.log("login success.");
             console.log(yht_ticket.ticket);
             // 去开发者中心验票获得登录授权
             let validate_ticket = await getValidateTicketDevelop({ ticket: yht_ticket.ticket });
-            console.log(validate_ticket);
-            let sendResult = await send({
-                url: 'http://codingcloud5.dev.app.yyuap.com/codingcloud/gentplrepweb/list/mtl'
-            });
-            console.log(sendResult);
-        }else{
+            // console.log(validate_ticket);
+            // let sendResult = await send({
+            //     url: 'http://codingcloud5.dev.app.yyuap.com/codingcloud/gentplrepweb/list/mtl'
+            // });
+            // console.log(sendResult);
+            event.sender.send('mtl::login::success', { success: true, message: 'login success.' });
+        } else {
             console.log("login fail.");
+            event.sender.send('mtl::login::fail', { success: false, message: 'login fail.' });
         }
+    });
+    // 记住登录返回的用户名和密码
+    ipcMain.on('mtl::login::remember', (event, arg) => {
+        event.sender.send('mtl::login::remember::success', getRemember());
     });
 }
