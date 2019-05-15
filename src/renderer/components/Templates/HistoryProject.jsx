@@ -17,18 +17,18 @@ ipc.on('uba::import::error', (event, errMsg) => {
 });
 //导入有效工程，得到最新工程对象
 ipc.on('uba::import::success', (event, workSpace) => {
-    actions.welcome.setHistoryProject(workSpace);
+    actions.templates.setHistoryProject(workSpace);
 });
 
 //接收本地配置历史记录
 ipc.on('uba::view::project', (event, workSpace, lastpath) => {
-    actions.welcome.setHistoryProject(workSpace);
-    actions.welcome.setLastPath(lastpath);
+    actions.templates.setHistoryProject(workSpace);
+    actions.templates.setLastPath(lastpath);
 });
 
 class HistoryProject extends Component {
     openHistoryHandler = (item, index) => () => {
-        actions.welcome.save({
+        actions.templates.save({
             projectName: item.projectName,
             projectPath: item.projectPath,
             repositories: item.repositories,
@@ -39,7 +39,7 @@ class HistoryProject extends Component {
             runProject : path.join(item.projectPath,item.projectName),
             title:item.title
         });
-        actions.welcome.finish();
+        actions.templates.finish();
     }
     renderHistoryProject = (historyArr) => {
         //https://img.alicdn.com/tfs/TB1tnAWdHSYBuNjSspiXXXNzpXa-1920-1080.png
@@ -73,4 +73,4 @@ class HistoryProject extends Component {
     }
 }
 
-export default connect((state) => state.welcome)(HistoryProject);
+export default connect((state) => state.templates)(HistoryProject);

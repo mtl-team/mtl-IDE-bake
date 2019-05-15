@@ -1,13 +1,13 @@
+/**
+ * 路由表
+ */
+
 import React, { Component } from 'react';
 import { Switch, Route } from 'mirrorx';
-// import EmptyHome from 'containers/EmptyHome';
-// import Init from 'containers/Init';
-// import MySpace from 'containers/MySpace';
-import Welcome from 'containers/Welcome';
-import MainPanel from 'containers/MainPanel';
+// 登录界面
 import Login from 'containers/Login';
+// 展示当前模板
 import Templates from 'containers/Templates';
-
 
 
 class Routes extends Component {
@@ -16,8 +16,6 @@ class Routes extends Component {
             <Switch>
                 <Route exact path="/" component={Login} />
                 <Route exact path="/templates" component={Templates} />
-                <Route exact path="/welcome" component={Welcome} />
-                <Route path="/main" component={MainPanel} />
             </Switch>
         );
     }

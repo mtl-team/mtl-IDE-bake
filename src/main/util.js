@@ -11,6 +11,7 @@ const rp = require('request-promise');
 import is from 'electron-is';
 import fse from 'fs-extra';
 import fs from 'fs';
+import path from 'path';
 const utils = require('utility');
 const Configstore = require('configstore');
 const conf = new Configstore('mtlconfig');
@@ -312,4 +313,26 @@ export const getRemember = () => {
         }
     }
     return resultJson;
+}
+
+/**
+ * 获得远端的模板列表JSON
+ */
+export const getRemoteList = async () => {
+    let opt = {
+        url: 'http://cloudcoding.dev.app.yyuap.com/codingcloud/gentplrepweb/list/mtl'
+    };
+    return await send(opt);
+}
+
+/**
+ * 下载zip压缩包包含路径文件名
+ */
+export const getRemoteZip = ({ filename, filepath }) => {
+    let url = `http://codingcloud5.dev.app.yyuap.com/codingcloud/genweb/downloadIuapFe?projectCode=${filename}`
+    return new Promise((resolve, reject) => {
+        download({ url }, `${filepath}${filepath}.zip`, () => {
+            resolve();
+        });
+    });
 }

@@ -13,7 +13,7 @@ import welcome_mirror from 'static/welcome_mirror.png';
 import welcome_cloud from 'static/welcome_cloud.png';
 
 
-import './Helper.less';
+import './index.less';
 
 class Helper extends Component {
     openTinper = () => {

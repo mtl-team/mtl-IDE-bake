@@ -1,12 +1,12 @@
 /**
- * @description 登录
+ * 登录界面
  */
 
 import React, { Component } from 'react';
 import mirror, { actions, connect } from 'mirrorx';
 import { Layout, Row, Col, Form, Icon, Input, Button, Checkbox, notification } from 'antd';
 import { ipcRenderer } from 'electron';
-import Helper from '../Welcome/Helper';
+import Helper from '../Helper';
 
 import './index.less';
 
@@ -38,7 +38,7 @@ ipc.on('mtl::login::fail', (event, msg) => {
 });
 
 /**
- * 保存用户
+ * 记录用户，恢复登录
  */
 ipc.on('mtl::login::remember::success', (event, msg) => {
     console.log('mtl::login::remember::success', msg);
@@ -56,6 +56,7 @@ class Login extends Component {
         // 检测是否自动登录
         ipc.send('mtl::login::remember');
     }
+
     // 登录
     handleSubmit = e => {
         e.preventDefault();
@@ -63,7 +64,7 @@ class Login extends Component {
             if (!err) {
                 console.log('Received values of form: ', values);
                 actions.login.save({ loading: true });
-
+                // 检测前端数据完整性，发送登录消息告知后端服务
                 ipc.send('mtl::login', {
                     username: values.username,
                     password: values.password,

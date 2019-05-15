@@ -6,7 +6,9 @@ import React, { Component } from 'react';
 import mirror, { actions, connect } from 'mirrorx';
 import { Layout, Row, Col, Form, Icon, Input, Button, Checkbox, notification } from 'antd';
 import { ipcRenderer } from 'electron';
-import Helper from '../Welcome/Helper';
+import Helper from '../Helper';
+import CreateProject from './CreateProject';
+import Setting from './Setting';
 
 import './index.less';
 
@@ -18,6 +20,7 @@ class Templates extends Component {
     componentDidMount() {
     }
     render() {
+        let { initStep } = this.props;
         return (
             <Layout className="login-wrap" style={{ "background": "#f4f4f4" }}>
                 <Content>
@@ -26,7 +29,8 @@ class Templates extends Component {
                             <Helper />
                         </Col>
                         <Col span={17}>
-
+                            {initStep == 0 && <CreateProject />}
+                            {(initStep == 1 || initStep == 2) && <Setting />}
                         </Col>
                     </Row>
                 </Content>

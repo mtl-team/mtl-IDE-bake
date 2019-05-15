@@ -25,25 +25,25 @@ ipc.on('uba::openProject::success', (event, path) => {
 });
 //接收下载远端脚手架成功
 ipc.on('uba::init::success', (event, workSpace) => {
-    actions.welcome.setHistoryProject(workSpace);
+    actions.templates.setHistoryProject(workSpace);
     console.log('uba::init::success', workSpace);
     countTimer = 100;
     clearInterval(installTimer);
-    let state = actions.welcome.setUpdateProcessState({
+    let state = actions.templates.setUpdateProcessState({
         isFinish: true,
         percent: countTimer,
         processMsg: `脚手架下载成功`,
     });
     //判断是否自动安装npminstall
     if (state.npmInstall) {
-        ipc.send('uba::install', actions.welcome.getInitParams());
+        ipc.send('uba::install', actions.templates.getInitParams());
         countTimer = 0;
         installTimer = setInterval(() => {
             countTimer++;
             if (countTimer > 95) {
                 clearInterval(installTimer);
             }
-            actions.welcome.setUpdateProcessState({
+            actions.templates.setUpdateProcessState({
                 isFinish: false,
                 percent: countTimer,
                 processMsg: `正在安装依赖包请稍等`,
@@ -55,7 +55,7 @@ ipc.on('uba::init::success', (event, workSpace) => {
 ipc.on('uba::install::success', () => {
     countTimer = 100;
     clearInterval(installTimer);
-    let state = actions.welcome.setUpdateProcessState({
+    let state = actions.templates.setUpdateProcessState({
         isFinish: true,
         percent: countTimer,
         processMsg: `所有安装已经完毕`,
@@ -79,13 +79,13 @@ class Setting extends Component {
             if (!err) {
                 console.log(values);
                 //写入设置信息
-                actions.welcome.setSetting(values);
+                actions.templates.setSetting(values);
                 //获得安装信息
-                let params = actions.welcome.getInitParams();
+                let params = actions.templates.getInitParams();
                 //发送IPC执行安装
                 ipc.send('uba::init', params);
                 //切换组件到等待
-                actions.welcome.setInitStep(2);
+                actions.templates.setInitStep(2);
 
                 //启动进度条
                 clearInterval(installTimer);
@@ -94,7 +94,7 @@ class Setting extends Component {
                     if (countTimer > 95) {
                         clearInterval(installTimer);
                     }
-                    actions.welcome.setUpdateProcessState({
+                    actions.templates.setUpdateProcessState({
                         isFinish: false,
                         percent: countTimer,
                         processMsg: `正在下载【${params.title}】脚手架请稍等`,
@@ -110,18 +110,18 @@ class Setting extends Component {
     }
     //安装完成
     handlerFinish = () => {
-        // actions.welcome.save({
+        // actions.templates.save({
         //     projectName: item.projectName,
         //     projectPath: item.projectPath,
         //     repositories: item.repositories,
         //     organization: item.organization,
         //     registry: item.registry
         // });
-        ipc.send('uba::set::config',{
-            runProject : path.join(this.props.projectPath,this.props.projectName),
-            title:this.props.title
+        ipc.send('uba::set::config', {
+            runProject: path.join(this.props.projectPath, this.props.projectName),
+            title: this.props.title
         });
-        actions.welcome.finish();
+        actions.templates.finish();
     }
     render() {
         let { initStep, setting, title, projectPath, registry, processMsg, percent, isFinish } = this.props;
@@ -212,7 +212,7 @@ class Setting extends Component {
             <Row className="opeate">
                 {initStep == 1 && <Col span={24}>
                     <div className="setting-btn">
-                        <Button icon="left-square-o" onClick={() => { actions.welcome.setInitStep(0) }} >返回</Button>
+                        <Button icon="left-square-o" onClick={() => { actions.templates.setInitStep(0) }} >返回</Button>
                     </div>
                     <div className="setting-btn">
                         <Button icon="right-square-o" onClick={this.handleSubmit} style={{ "marginRight": "10px" }} type="primary">安装</Button>
@@ -231,4 +231,4 @@ class Setting extends Component {
     }
 }
 
-export default connect((state) => state.welcome)(Form.create()(Setting));
+export default connect((state) => state.templates)(Form.create()(Setting));

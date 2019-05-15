@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import mirror, { actions, connect } from 'mirrorx';
 import { Tabs, Icon, Button, Col, Row, Tag } from 'antd';
 import HistoryProject from './HistoryProject';
-import FengChao from './FengChao';
+import RemoteList from './RemoteList';
 const TabPane = Tabs.TabPane;
 
 import './CreateProject.less';
@@ -23,13 +23,13 @@ class CreateProject extends Component {
                                 <HistoryProject />
                             </TabPane>
                             <TabPane className="tabs-left" tab={<span><Icon type="profile" />创建新项目</span>} key="2">
-                                <FengChao />
+                                <RemoteList />
                                 <Row>
                                     <Col className="select-item" span={12}>
                                         <span>已选择：</span><Tag color="blue">{title}</Tag>
                                     </Col>
                                     <Col className="tabs-right" span={12}>
-                                        <Button icon="check-square-o" onClick={() => { actions.welcome.setInitStep(1) }} disabled={!repositories} className="btn" type="primary">选择</Button>
+                                        <Button icon="check-square-o" onClick={() => { actions.templates.setInitStep(1) }} disabled={!repositories} className="btn" type="primary">选择</Button>
                                     </Col>
                                 </Row>
                             </TabPane>
@@ -41,4 +41,4 @@ class CreateProject extends Component {
     }
 }
 
-export default connect((state) => state.welcome)(CreateProject);
+export default connect((state) => state.templates)(CreateProject);
