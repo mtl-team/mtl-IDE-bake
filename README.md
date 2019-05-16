@@ -9,6 +9,9 @@
 ## 截图
 
 ![images](./screenshot/login@2x.png)
+![images](./screenshot/list@2x.png)
+![images](./screenshot/setting@2x.png)
+![images](./screenshot/loading@2x.png)
 
 ## 启动命令
 
