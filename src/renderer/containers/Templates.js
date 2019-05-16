@@ -20,7 +20,7 @@ ipc.on('mtl::templates::get::list::success', (event, data) => {
 mirror.hook((action, getState) => {
   const { routing: { location } } = getState();
   if (action.type === '@@router/LOCATION_CHANGE' && location.pathname === '/templates') {
-    ipc.send('mtl::templates::get::list');
+    setTimeout(() => ipc.send('mtl::templates::get::list'), 1500);
   }
 });
 

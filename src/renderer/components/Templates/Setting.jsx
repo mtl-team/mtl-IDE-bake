@@ -176,7 +176,7 @@ class Setting extends Component {
                                 <Input disabled placeholder='请选择本地开发目录' addonAfter={<Icon onClick={this.handlerPath} type="folder-open" />} prefix={<Icon type="setting" style={{ color: 'rgba(0,0,0,.25)' }} />} />
                             )}
                         </FormItem>
-                        <FormItem
+                        {/* <FormItem
                             label="初始化依赖"
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
@@ -187,8 +187,8 @@ class Setting extends Component {
                             })(
                                 <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="cross" />} />
                             )}
-                        </FormItem>
-                        <FormItem
+                        </FormItem> */}
+                        {/* <FormItem
                             label="npm镜像源"
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
@@ -202,7 +202,7 @@ class Setting extends Component {
                                     <Option value="https://registry.npmjs.org">https://registry.npmjs.org</Option>
                                 </Select>
                             )}
-                        </FormItem>
+                        </FormItem> */}
                     </Form>}
                     {
                         initStep == 2 && <Waiting processMsg={processMsg} percent={percent} />

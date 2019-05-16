@@ -44,25 +44,4 @@ export default () => {
             event.sender.send('mtl::login::fail', { success: false, message: 'login fail.' });
         }
     });
-    // 记住登录返回的用户名和密码
-    ipcMain.on('mtl::login::remember', (event, arg) => {
-        event.sender.send('mtl::login::remember::success', getRemember());
-    });
-    // 获得在线列表
-    ipcMain.on('mtl::templates::get::list', async (event, arg) => {
-        let result = JSON.parse(await getRemoteList());
-        let jsondata = {
-            success: result.success == 'success',
-            data: result.success == 'success' ? result.detailMsg.data.content : []
-        }
-        if (result.success == 'success') {
-            event.sender.send('mtl::templates::get::list::success', jsondata);
-        } else {
-            event.sender.send('mtl::templates::get::list::fail', jsondata);
-        }
-    });
-    // 下载文件
-    ipcMain.on('mtl::templates::download', async (event, arg) => {
-        await getRemoteZip(arg.filename);
-    });
 }

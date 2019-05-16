@@ -7,9 +7,9 @@
 
 export default function ubaMenu({ app }) {
     return {
-        label: '应用平台开发者工具',
+        label: 'MTL - IDE',
         submenu: [{
-            label: 'About uba GUI',
+            label: 'About MTL IDE',
             role: 'about'
         }, {
             type: 'separator'
