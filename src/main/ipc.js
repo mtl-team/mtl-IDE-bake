@@ -10,10 +10,12 @@
 
 import login from './ipc/login';
 import templates from './ipc/templates';
+import openProject from './ipc/openProject';
 
 const IPC = () => {
     login();// 登录友户通
     templates();// 在线模板
+    openProject();// Dialog
 }
 
 export default IPC;

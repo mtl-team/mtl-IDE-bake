@@ -71,10 +71,10 @@ export default {
         //安装设置
         setSetting(data, getState) {
             actions.templates.save({
-                projectName: data.projectName,
-                projectPath: data.projectPath,
-                npmInstall: data.npmInstall,
-                registry: data.registry
+                projectName: data.title,
+                projectPath: `${data.projectPath}/${data.projectName}`,
+                // npmInstall: data.npmInstall,
+                // registry: data.registry
             });
         },
         //修改内网npm镜像源

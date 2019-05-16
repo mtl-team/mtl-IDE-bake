@@ -44,4 +44,9 @@ export default () => {
             event.sender.send('mtl::login::fail', { success: false, message: 'login fail.' });
         }
     });
+    // 记住登录返回的用户名和密码
+    ipcMain.on('mtl::login::remember', (event, arg) => {
+        event.sender.send('mtl::login::remember::success', getRemember());
+    });
+
 }

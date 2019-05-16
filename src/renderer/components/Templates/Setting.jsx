@@ -18,7 +18,7 @@ const ipc = ipcRenderer;
 let setFieldsValue;
 let installTimer, countTimer = 0;
 //选择路径后设置路径值
-ipc.on('uba::openProject::success', (event, path) => {
+ipc.on('mtl::open::dialog::success', (event, path) => {
     setFieldsValue({
         projectPath: path
     });
@@ -78,35 +78,31 @@ class Setting extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log(values);
-                //写入设置信息
-                actions.templates.setSetting(values);
-                //获得安装信息
-                let params = actions.templates.getInitParams();
                 //发送IPC执行安装
-                ipc.send('uba::init', params);
+                ipc.send('mtl::templates::download', { filename: values.title, filepath: `${values.projectPath}/${values.projectName}` });
                 //切换组件到等待
                 actions.templates.setInitStep(2);
 
                 //启动进度条
-                clearInterval(installTimer);
-                installTimer = setInterval(() => {
-                    countTimer++;
-                    if (countTimer > 95) {
-                        clearInterval(installTimer);
-                    }
-                    actions.templates.setUpdateProcessState({
-                        isFinish: false,
-                        percent: countTimer,
-                        processMsg: `正在下载【${params.title}】脚手架请稍等`,
-                    });
-                }, 1000);
+                // clearInterval(installTimer);
+                // installTimer = setInterval(() => {
+                //     countTimer++;
+                //     if (countTimer > 95) {
+                //         clearInterval(installTimer);
+                //     }
+                //     actions.templates.setUpdateProcessState({
+                //         isFinish: false,
+                //         percent: countTimer,
+                //         processMsg: `正在下载【${params.title}】脚手架请稍等`,
+                //     });
+                // }, 1000);
 
             }
         });
     }
     //选择保存位置dialog
     handlerPath = () => {
-        ipc.send('uba::openProject');
+        ipc.send('mtl::open::dialog');
     }
     //安装完成
     handlerFinish = () => {

@@ -331,7 +331,7 @@ export const getRemoteList = async () => {
 export const getRemoteZip = ({ filename, filepath }) => {
     let url = `http://codingcloud5.dev.app.yyuap.com/codingcloud/genweb/downloadIuapFe?projectCode=${filename}`
     return new Promise((resolve, reject) => {
-        download({ url }, `${filepath}${filepath}.zip`, () => {
+        download({ url }, `${filepath}/${filename}.zip`, () => {
             resolve();
         });
     });

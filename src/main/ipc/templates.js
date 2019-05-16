@@ -30,6 +30,6 @@ export default () => {
     });
     // 下载文件
     ipcMain.on('mtl::templates::download', async (event, arg) => {
-        await getRemoteZip(arg.filename);
+        await getRemoteZip(arg);
     });
 }
