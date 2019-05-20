@@ -7,7 +7,7 @@ import { Steps, Icon, Row, Col, Select, Form, Input, Switch, Button } from 'antd
 import mirror, { actions, connect } from 'mirrorx';
 import { ipcRenderer, remote } from 'electron';
 import path from 'path';
-import Waiting from '../Waiting';
+import Waiting from './Waiting';
 import './Setting.less';
 
 const Step = Steps.Step;
@@ -23,36 +23,9 @@ ipc.on('mtl::open::dialog::success', (event, path) => {
         projectPath: path
     });
 });
-//接收下载远端脚手架成功
-ipc.on('uba::init::success', (event, workSpace) => {
-    actions.templates.setHistoryProject(workSpace);
-    console.log('uba::init::success', workSpace);
-    countTimer = 100;
-    clearInterval(installTimer);
-    let state = actions.templates.setUpdateProcessState({
-        isFinish: true,
-        percent: countTimer,
-        processMsg: `脚手架下载成功`,
-    });
-    //判断是否自动安装npminstall
-    if (state.npmInstall) {
-        ipc.send('uba::install', actions.templates.getInitParams());
-        countTimer = 0;
-        installTimer = setInterval(() => {
-            countTimer++;
-            if (countTimer > 95) {
-                clearInterval(installTimer);
-            }
-            actions.templates.setUpdateProcessState({
-                isFinish: false,
-                percent: countTimer,
-                processMsg: `正在安装依赖包请稍等`,
-            });
-        }, 1000);
-    }
-});
-//uba::install::success
-ipc.on('uba::install::success', () => {
+
+// MTL zip下载解压完成
+ipc.on('mtl::templates::download::success', (event, err) => {
     countTimer = 100;
     clearInterval(installTimer);
     let state = actions.templates.setUpdateProcessState({
@@ -60,15 +33,6 @@ ipc.on('uba::install::success', () => {
         percent: countTimer,
         processMsg: `所有安装已经完毕`,
     });
-});
-//
-//接收下载远端脚手架失败
-ipc.on('uba::init::error', (event) => {
-    console.log('uba::init::error')
-});
-
-ipc.on('uba::install::error', (event, err) => {
-    console.log('uba::install::error', err)
 });
 
 
@@ -84,18 +48,18 @@ class Setting extends Component {
                 actions.templates.setInitStep(2);
 
                 //启动进度条
-                // clearInterval(installTimer);
-                // installTimer = setInterval(() => {
-                //     countTimer++;
-                //     if (countTimer > 95) {
-                //         clearInterval(installTimer);
-                //     }
-                //     actions.templates.setUpdateProcessState({
-                //         isFinish: false,
-                //         percent: countTimer,
-                //         processMsg: `正在下载【${params.title}】脚手架请稍等`,
-                //     });
-                // }, 1000);
+                clearInterval(installTimer);
+                installTimer = setInterval(() => {
+                    countTimer++;
+                    if (countTimer > 95) {
+                        clearInterval(installTimer);
+                    }
+                    actions.templates.setUpdateProcessState({
+                        isFinish: false,
+                        percent: countTimer,
+                        processMsg: `正在下载【${values.title}】脚手架请稍等`,
+                    });
+                }, 1000);
 
             }
         });
@@ -106,17 +70,6 @@ class Setting extends Component {
     }
     //安装完成
     handlerFinish = () => {
-        // actions.templates.save({
-        //     projectName: item.projectName,
-        //     projectPath: item.projectPath,
-        //     repositories: item.repositories,
-        //     organization: item.organization,
-        //     registry: item.registry
-        // });
-        ipc.send('uba::set::config', {
-            runProject: path.join(this.props.projectPath, this.props.projectName),
-            title: this.props.title
-        });
         actions.templates.finish();
     }
     render() {
@@ -172,33 +125,6 @@ class Setting extends Component {
                                 <Input disabled placeholder='请选择本地开发目录' addonAfter={<Icon onClick={this.handlerPath} type="folder-open" />} prefix={<Icon type="setting" style={{ color: 'rgba(0,0,0,.25)' }} />} />
                             )}
                         </FormItem>
-                        {/* <FormItem
-                            label="初始化依赖"
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                        >
-                            {getFieldDecorator('npmInstall', {
-                                valuePropName: 'checked',
-                                initialValue: true
-                            })(
-                                <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="cross" />} />
-                            )}
-                        </FormItem> */}
-                        {/* <FormItem
-                            label="npm镜像源"
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                        >
-                            {getFieldDecorator('registry', {
-                                rules: [{ required: true, message: '请选择npm加速镜像' }],
-                                initialValue: registry
-                            })(
-                                <Select placeholder="请选择镜像源">
-                                    <Option value="https://registry.npm.taobao.org">https://registry.npm.taobao.org</Option>
-                                    <Option value="https://registry.npmjs.org">https://registry.npmjs.org</Option>
-                                </Select>
-                            )}
-                        </FormItem> */}
                     </Form>}
                     {
                         initStep == 2 && <Waiting processMsg={processMsg} percent={percent} />

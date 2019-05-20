@@ -11,6 +11,8 @@ import {
     log, getYhtTicket, getValidateTicketDevelop,
     send, getRemember, getRemoteList, getRemoteZip
 } from 'main/util';
+import fse from 'fs-extra';
+import unzipper from 'unzipper';
 
 
 export default () => {
@@ -30,6 +32,17 @@ export default () => {
     });
     // 下载文件
     ipcMain.on('mtl::templates::download', async (event, arg) => {
-        await getRemoteZip(arg);
+        let result = await getRemoteZip(arg);
+        if (result.success) {
+            fse.createReadStream(`${arg.filepath}/${arg.filename}.zip`).pipe(unzipper.Extract({ path: arg.filepath })).on('close', () => {
+                event.sender.send('mtl::templates::download::success');
+                fse.remove(`${arg.filepath}/${arg.filename}.zip`);
+            });
+        }
+        // getRemoteZip(arg, () => {
+        //     fs.createReadStream(`${arg.filepath}/${arg.filename}.zip`).pipe(unzipper.Extract({ path: arg.filepath })).on('close', () => {
+        //         event.sender.send('mtl::templates::download::success');
+        //     });
+        // });
     });
 }

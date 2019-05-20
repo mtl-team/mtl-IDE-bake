@@ -20,7 +20,7 @@ ipc.on('mtl::login::success', (event, msg) => {
     console.log('mtl::login::success', msg);
     notification.success({
         message: '登录成功',
-        description: '正在跳转，请稍等！'
+        description: '加载在线模板中，请稍等！'
     });
     actions.login.save({ loading: false });
     actions.routing.push('/templates');

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import loadingGif from 'static/loading.gif';
 import { Divider, Progress } from 'antd';
 
-import './index.less';
+import './Waiting.less';
 
 class Waiting extends Component {
     render() {

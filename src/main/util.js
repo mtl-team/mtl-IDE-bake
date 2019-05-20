@@ -328,11 +328,12 @@ export const getRemoteList = async () => {
 /**
  * 下载zip压缩包包含路径文件名
  */
-export const getRemoteZip = ({ filename, filepath }) => {
+export const getRemoteZip = ({ filename, filepath }, cb) => {
     let url = `http://codingcloud5.dev.app.yyuap.com/codingcloud/genweb/downloadIuapFe?projectCode=${filename}`
     return new Promise((resolve, reject) => {
         download({ url }, `${filepath}/${filename}.zip`, () => {
-            resolve();
+            resolve({ success: true });
         });
     });
+    // download({ url }, `${filepath}/${filename}.zip`, cb);
 }
