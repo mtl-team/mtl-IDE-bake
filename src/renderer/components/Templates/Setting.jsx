@@ -26,13 +26,15 @@ ipc.on('mtl::open::dialog::success', (event, path) => {
 
 // MTL zip下载解压完成
 ipc.on('mtl::templates::download::success', (event, err) => {
+    // 安装完成切换状态
     countTimer = 100;
     clearInterval(installTimer);
-    let state = actions.templates.setUpdateProcessState({
+    actions.templates.setUpdateProcessState({
         isFinish: true,
         percent: countTimer,
         processMsg: `所有安装已经完毕`,
     });
+    // 写入配置文件，项目路径
 });
 
 

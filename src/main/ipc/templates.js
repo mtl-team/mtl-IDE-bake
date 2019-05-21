@@ -35,7 +35,9 @@ export default () => {
         let result = await getRemoteZip(arg);
         if (result.success) {
             fse.createReadStream(`${arg.filepath}/${arg.filename}.zip`).pipe(unzipper.Extract({ path: arg.filepath })).on('close', () => {
+                // 解压完成发送消息
                 event.sender.send('mtl::templates::download::success');
+                // 删除压缩包
                 fse.remove(`${arg.filepath}/${arg.filename}.zip`);
             });
         }

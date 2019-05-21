@@ -13,12 +13,15 @@ import { clearScreenDown } from 'readline';
 const createWindow = () => {
     // Create the browser window.
     let win = new BrowserWindow({
+        webPreferences: {
+            nodeIntegration: true
+        },
         width: 930,
         minWidth: 930,
-        maxWidth:1300,
+        maxWidth: 1300,
         height: 630,
         minHeight: 630,
-        maxHeight:825,
+        maxHeight: 825,
         center: true,
         resizable: true,
         alwaysOnTop: false,

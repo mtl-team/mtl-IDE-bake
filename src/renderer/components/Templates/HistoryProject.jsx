@@ -58,7 +58,7 @@ class HistoryProject extends Component {
             <div className="history-project-wrap">
                 <Card>
                     <Card.Grid className="card-item">
-                        <Tooltip placement="top" title="导入现有uba前端工程">
+                        <Tooltip placement="top" title="导入MTL工程">
                             <Icon onClick={() => { ipc.send('uba::import') }} className="plus" type="plus" />
                         </Tooltip>
                     </Card.Grid>
