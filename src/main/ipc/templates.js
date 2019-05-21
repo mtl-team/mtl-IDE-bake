@@ -9,7 +9,8 @@ import { ipcMain } from 'electron';
 
 import {
     log, getYhtTicket, getValidateTicketDevelop,
-    send, getRemember, getRemoteList, getRemoteZip
+    send, getRemember, getRemoteList,
+    getRemoteZip, setProjectConfig, getProjectConfig
 } from 'main/util';
 import fse from 'fs-extra';
 import unzipper from 'unzipper';
@@ -39,12 +40,13 @@ export default () => {
                 event.sender.send('mtl::templates::download::success');
                 // 删除压缩包
                 fse.remove(`${arg.filepath}/${arg.filename}.zip`);
+                // 写入配置项目路径
+                setProjectConfig(`${arg.filepath}/${arg.filename}`);
             });
         }
-        // getRemoteZip(arg, () => {
-        //     fs.createReadStream(`${arg.filepath}/${arg.filename}.zip`).pipe(unzipper.Extract({ path: arg.filepath })).on('close', () => {
-        //         event.sender.send('mtl::templates::download::success');
-        //     });
-        // });
+    });
+    // 显示历史
+    ipcMain.on('mtl::templates::projectpath', async (event, arg) => {
+        event.sender.send('mtl::templates::projectpath::success', getProjectConfig());
     });
 }

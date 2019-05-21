@@ -21,6 +21,7 @@ mirror.hook((action, getState) => {
   const { routing: { location } } = getState();
   if (action.type === '@@router/LOCATION_CHANGE' && location.pathname === '/templates') {
     setTimeout(() => ipc.send('mtl::templates::get::list'), 1500);
+    ipc.send('mtl::templates::projectpath');
   }
 });
 

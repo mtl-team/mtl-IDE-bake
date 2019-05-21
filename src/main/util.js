@@ -337,3 +337,30 @@ export const getRemoteZip = ({ filename, filepath }, cb) => {
     });
     // download({ url }, `${filepath}/${filename}.zip`, cb);
 }
+
+/**
+ * 写入路径配置文件
+ */
+export const setProjectConfig = (projectpath) => {
+    let currProject = conf.get('projectPaths');
+    // 判断第一次是否有存储
+    if (!currProject) {
+        // 没有，保存即可
+        conf.set('projectPaths', [].concat(projectpath));
+    } else {
+        // 不是空，需要判断是否存在
+        currProject.map(item => {
+            if (projectpath != item) {// 不存在写入
+                conf.set('projectPaths', currProject.concat(projectpath));
+            }
+        });
+    }
+}
+
+/**
+ * 读取路径配置文件
+ */
+export const getProjectConfig = () => {
+    let currProject = conf.get('projectPaths');
+    return currProject;
+}
