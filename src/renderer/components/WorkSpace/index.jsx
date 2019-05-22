@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Layout } from 'antd';
+import MonacoEditor from 'react-monaco-editor';
 import iosbar from 'static/iosbar.png';
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -26,6 +27,9 @@ class WorkSpace extends Component {
         //<webview id="foo" src="https://mobile.ant.design/kitchen-sink/components/drawer?lang=zh-CN#drawer-demo-0" ></webview>
     }
     render() {
+        const options = {
+            selectOnLineNumbers: true
+          };
         return (<div className="workspace-wrap">
             <Layout>
                 <Header>Header</Header>
@@ -33,15 +37,37 @@ class WorkSpace extends Component {
                     <Sider width={380} className="simulator">
                         <div className="screen">
                             <img src={iosbar} />
-                            <webview style={{ "width": "100%", "height": "650px" }}
+                            <webview className="device"
                                 id="browser"
                                 src="https://mobile.ant.design/kitchen-sink/?lang=zh-CN"
                             >
                             </webview>
                         </div>
                     </Sider>
-                    <Content>
-                        <webview style={{ "height": "100%" }} id="devtools"></webview>
+                    <Content className="opeate">
+                        <Layout>
+                            <Content className="editor">
+                            <Layout>
+                                <Layout>
+                                    <Sider style={{"background":"#ececec","height":"490px"}}>
+                                        Dir
+                                    </Sider>
+                                    <Content>
+                                    <MonacoEditor
+                                        width="100%"
+                                        height="490px"
+                                        language="javascript"
+                                        options={options}
+                                        value={"console.log(123)"}
+                                    />
+                                    </Content>
+                                </Layout>
+                            </Layout>
+                            </Content>
+                            <Content className="debug">
+                                <webview className="chrome-console" id="devtools"></webview>
+                            </Content>
+                        </Layout>
                     </Content>
                 </Layout>
             </Layout>
