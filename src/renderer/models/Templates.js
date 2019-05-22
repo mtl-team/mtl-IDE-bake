@@ -105,7 +105,7 @@ export default {
             let win = remote.getGlobal('win');
             win.setSize(1380, 825, true);
             win.center();
-            actions.routing.push('main/welcome');
+            actions.routing.push('workspace');
         }
     }
 }

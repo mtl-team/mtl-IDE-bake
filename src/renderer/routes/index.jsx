@@ -8,6 +8,8 @@ import { Switch, Route } from 'mirrorx';
 import Login from 'containers/Login';
 // 展示当前模板
 import Templates from 'containers/Templates';
+// 开发工作区
+import WorkSpace from 'containers/WorkSpace';
 
 
 class Routes extends Component {
@@ -16,6 +18,7 @@ class Routes extends Component {
             <Switch>
                 <Route exact path="/" component={Login} />
                 <Route exact path="/templates" component={Templates} />
+                <Route exact path="/workspace" component={WorkSpace} />
             </Switch>
         );
     }
