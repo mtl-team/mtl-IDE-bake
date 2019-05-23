@@ -9,6 +9,7 @@ import { ipcRenderer, remote } from 'electron';
 export default {
     name: "workspace",
     initialState: {
+        editor: []
     },
     reducers: {
         save(state, data) {

@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import semverRegex from 'semver-regex';
+import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 import { devDependencies } from './../package.json';
 
 const electronVersion = semverRegex().exec(devDependencies.electron)[0];
@@ -76,14 +77,18 @@ export default {
           },
         },
       },
-      { test: /\.(?:ico|gif|png|jpg|jpeg|tiff|webp)$/, use: { loader: "url-loader",options:{limit:8196,name:"images/[name].[ext]"} } }, // Common Image Formats
+      { test: /\.(?:ico|gif|png|jpg|jpeg|tiff|webp)$/, use: { loader: "url-loader", options: { limit: 8196, name: "images/[name].[ext]" } } }, // Common Image Formats
     ],
   },
   output: {
     path: resolve(__dirname, '../app/renderer'),
     filename: '[name].js',
   },
-  plugins: [],
+  plugins: [
+    new MonacoWebpackPlugin({
+      languages: ['json', 'javascript']
+    })
+  ],
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
     alias: {
@@ -91,7 +96,7 @@ export default {
       containers: resolve(__dirname, "../src/renderer/containers/"),
       services: resolve(__dirname, "../src/renderer/services/"),
       models: resolve(__dirname, "../src/renderer/models/"),
-      common: resolve(__dirname, "../src/renderer/common/"),      
+      common: resolve(__dirname, "../src/renderer/common/"),
       static: resolve(__dirname, "../static/")
     }
   },
